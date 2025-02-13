@@ -1,5 +1,5 @@
 #start from r-base
-FROM r-base:latest
+FROM rocker/binder
 
 USER root
 COPY . ${HOME}
