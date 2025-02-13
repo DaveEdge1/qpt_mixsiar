@@ -5,8 +5,8 @@ USER root
 COPY . ${HOME}
 
 #update Ubuntu
-RUN apt-get -y update
-#  && apt-get install adduser
+RUN apt-get -y update \
+  && apt-get install adduser
 
 ARG NB_USER=user1
 ARG NB_UID=1000
