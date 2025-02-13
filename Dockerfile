@@ -2,39 +2,39 @@
 FROM rocker/r-base
 
 USER root
-COPY . ${HOME}
+ADD . .
 
 #update Ubuntu
-RUN apt-get -y update \
-  && apt-get install adduser
+RUN apt-get -y update
+#  && apt-get install adduser
 
-ARG NB_USER=user1
-ARG NB_UID=1000
-ENV USER ${NB_USER}
-ENV NB_UID ${NB_UID}
-ENV HOME /home/${NB_USER}
+#ARG NB_USER=user1
+#ARG NB_UID=1000
+#ENV USER ${NB_USER}
+#ENV NB_UID ${NB_UID}
+#ENV HOME /home/${NB_USER}
 
-RUN usermod -d /home/user1 -l newname node
+#RUN usermod -d /home/user1 -l newname node
 
 #RUN adduser --disabled-password \
 #    --gecos "Default user" \
 #    --uid ${NB_UID} \
 #    ${NB_USER}
 
-RUN chown -R ${NB_UID} ${HOME}
-RUN chown -R ${NB_UID} /opt/user1
+#RUN chown -R ${NB_UID} ${HOME}
+#RUN chown -R ${NB_UID} /opt/user1
 
-WORKDIR ${HOME}
-USER ${NB_USER}
+#WORKDIR ${HOME}
+#USER ${NB_USER}
 
-ENV PATH $PATH:/home/${NB_USER}/.local/bin
+#ENV PATH $PATH:/home/${NB_USER}/.local/bin
 
 #add python
 RUN apt-get -y install python3 python3-pip
 RUN python3 -m pip install --no-cache-dir notebook jupyterlab --break-system-packages
 RUN pip install --no-cache-dir jupyterhub --break-system-packages
 
-WORKDIR /opt/user1/
+#WORKDIR /opt/user1/
 
 #Install JAGS
 #from apt
@@ -69,4 +69,4 @@ RUN R -e "options(renv.config.pak.enabled = TRUE); renv::restore()"
 #COPY . ${HOME}
 #USER root
 #RUN chown -R ${NB_UID} ${HOME}
-USER ${NB_USER}
+#USER ${NB_USER}
