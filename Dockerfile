@@ -1,5 +1,10 @@
 #start from r-base
-FROM rocker/r-base
+FROM rocker/binder
+
+ARG NB_USER
+ARG NB_UID
+
+COPY --chown=${NB_USER} . ${HOME}
 
 USER root
 ADD . /home/
@@ -62,6 +67,7 @@ COPY renv.lock renv.lock
 ENV RENV_PATHS_LIBRARY renv/library
 
 #restore environment from lockfile
+USER ${NB_USER}
 RUN R -e "options(renv.config.pak.enabled = TRUE); renv::restore()"
 
 
