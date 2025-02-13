@@ -1,6 +1,9 @@
 #start from r-base
 FROM r-base:latest
 
+USER root
+COPY . ${HOME}
+
 #update Ubuntu
 RUN apt-get -y update
 #  && apt-get install adduser
@@ -32,7 +35,7 @@ RUN python3 pip_install_from_conda_yaml.py
 #Set up renv
 RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))"
 WORKDIR /home/docker_renv
-COPY . .
+COPY renv.lock renv.lock
 ENV RENV_PATHS_LIBRARY renv/library
 
 #restore environment from lockfile
@@ -51,7 +54,7 @@ ENV HOME /home/${NB_USER}
 #    ${NB_USER}
 
 # Make sure the contents of our repo are in ${HOME}
-COPY . ${HOME}
+#COPY . ${HOME}
 USER root
 RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}
