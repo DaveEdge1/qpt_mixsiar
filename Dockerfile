@@ -14,10 +14,12 @@ ENV USER ${NB_USER}
 ENV NB_UID ${NB_UID}
 ENV HOME /home/${NB_USER}
 
-RUN adduser --disabled-password \
-    --gecos "Default user" \
-    --uid ${NB_UID} \
-    ${NB_USER}
+RUN usermod -d /home/user1 -l newname node
+
+#RUN adduser --disabled-password \
+#    --gecos "Default user" \
+#    --uid ${NB_UID} \
+#    ${NB_USER}
 
 RUN chown -R ${NB_UID} ${HOME}
 RUN chown -R ${NB_UID} /opt/user1
