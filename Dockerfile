@@ -57,7 +57,7 @@ RUN python3 pip_install_from_conda_yaml.py
 
 #Set up renv
 RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))"
-WORKDIR /home/docker_renv
+WORKDIR /home
 COPY renv.lock renv.lock
 ENV RENV_PATHS_LIBRARY renv/library
 
