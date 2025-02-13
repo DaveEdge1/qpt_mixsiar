@@ -4,6 +4,9 @@ FROM rocker/binder
 ARG NB_USER
 ARG NB_UID
 
+RUN groupadd -g 1000 jovyan
+RUN useradd -g jovyan -u 1000 -m jovyan
+
 COPY --chown=${NB_USER} . ${HOME}
 
 USER root
