@@ -2,7 +2,7 @@
 FROM rocker/r-base
 
 USER root
-ADD . .
+ADD . /home/
 
 #update Ubuntu
 RUN apt-get -y update
