@@ -16,7 +16,8 @@ RUN adduser --disabled-password \
     ${NB_USER}
 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc \
-    && apt-get -y install libssl-dev python3 jags libx11-dev git libcurl4-openssl-dev make libgit2-dev zlib1g-dev libzmq3-dev libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev
+    && apt-get -y install libssl-dev python3 jags libx11-dev git libcurl4-openssl-dev make libgit2-dev zlib1g-dev libzmq3-dev libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev \
+    && apt-get -y install build-essential
 
 RUN wget https://cran.r-project.org/src/base/R-4/R-4.4.2.tar.gz -O R-4.4.2.tar.gz \
    && tar -xf R-4.4.2.tar.gz \
