@@ -79,12 +79,13 @@ RUN conda env create -f qpt_conda_env.yaml
 RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))"
 #WORKDIR /home
 COPY renv.lock renv.lock
-ENV RENV_PATHS_LIBRARY renv/library
+ENV RENV_PATHS_LIBRARY ${HOME}/renv/library
 
 #restore environment from lockfile
-#USER ${NB_USER}
-RUN R -e "options(renv.config.pak.enabled = TRUE); renv::restore()"
 
+USER root
+RUN R -e "options(renv.config.pak.enabled = TRUE); renv::restore()"
+USER ${NB_USER}
 SHELL ["conda", "run", "-n", "qpt", "/bin/bash", "-c"]
 # Make sure the contents of our repo are in ${HOME}
 #COPY . ${HOME}
