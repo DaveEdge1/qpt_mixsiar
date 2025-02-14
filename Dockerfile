@@ -4,20 +4,11 @@ FROM rocker/binder
 RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
 USER root
-RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
-ARG NB_USER=jovyan
+ARG NB_USER=rstudio
 ARG NB_UID=1000
 ENV USER ${NB_USER}
 ENV NB_UID ${NB_UID}
 ENV HOME /home/${NB_USER}
-RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
-RUN groupmod -g 1001 node \
-  && usermod -u 1001 -g 1001 node
-
-RUN adduser --disabled-password \
-    --gecos "Default user" \
-    --uid ${NB_UID} \
-    ${NB_USER}
 
 COPY . ${HOME}
 #Install JAGS
