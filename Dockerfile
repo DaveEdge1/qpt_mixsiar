@@ -1,31 +1,25 @@
 #start from r-base
-FROM continuumio/miniconda3
+#start from rocker/binder image
+FROM rocker/binder:4
 
-RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
+#Set up renv
+RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))"
+WORKDIR /home/docker_renv
+COPY renv.lock renv.lock
+ENV RENV_PATHS_LIBRARY renv/library
 
+## Declares build arguments
+ARG NB_USER
+ARG NB_UID
+
+COPY --chown=${NB_USER} . ${HOME}
+USER ${NB_USER}
+
+#restore environment from lockfile
 USER root
-ARG NB_USER=jovyan
-ARG NB_UID=1000
-ENV USER ${NB_USER}
-ENV NB_UID ${NB_UID}
-ENV HOME /home/${NB_USER}
-
-RUN adduser --disabled-password \
-    --gecos "Default user" \
-    --uid ${NB_UID} \
-    ${NB_USER}
-
-RUN apt-get -y update \
-    && apt-get -y install jags \
-    && apt-get -y install r-base-dev
+RUN R -e "options(renv.config.pak.enabled = TRUE); renv::restore()"
 
 # Make sure the contents of our repo are in ${HOME}
-COPY . ${HOME}
-USER root
-RUN chown -R ${NB_UID} "/usr/local/lib/R/site-library"
-RUN chown -R ${NB_UID} ${HOME}
-USER ${NB_USER}
-WORKDIR ${HOME}
 #update Ubuntu
 
 #  && apt-get install adduser
@@ -50,14 +44,16 @@ WORKDIR ${HOME}
 #USER ${NB_USER}
 
 #ENV PATH $PATH:/home/${NB_USER}/.local/bin
-
+COPY --chown=${NB_USER} . ${HOME}
+USER ${NB_USER}
 #add python
 #RUN apt-get -y install python3 python3-pip
 RUN python3 -m pip install --no-cache-dir notebook jupyterlab --break-system-packages
 RUN pip install --no-cache-dir jupyterhub --break-system-packages
 
 #WORKDIR /opt/user1/
-
+COPY --chown=${NB_USER} . ${HOME}
+USER ${NB_USER}
 #from source
 # RUN apt-get update && . /etc/environment \
 #   && wget sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Source/JAGS-4.3.2.tar.gz  -O jags.tar.gz \
@@ -74,17 +70,17 @@ RUN pip install --no-cache-dir jupyterhub --break-system-packages
 #RUN python3 pip_install_from_conda_yaml.py
 
 RUN conda env create -f qpt_conda_env.yaml
-
+COPY --chown=${NB_USER} . ${HOME}
+USER ${NB_USER}
 #Set up renv
-RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))"
+#RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))"
 #WORKDIR /home
-COPY renv.lock renv.lock
-ENV RENV_PATHS_LIBRARY ${HOME}/renv/library
+#COPY renv.lock renv.lock
+#ENV RENV_PATHS_LIBRARY ${HOME}/renv/library
 
 #restore environment from lockfile
 
-USER root
-RUN R -e "options(renv.config.pak.enabled = TRUE); renv::restore()"
+
 USER ${NB_USER}
 SHELL ["conda", "run", "-n", "qpt", "/bin/bash", "-c"]
 # Make sure the contents of our repo are in ${HOME}
