@@ -16,11 +16,17 @@ RUN adduser --disabled-password \
     ${NB_USER}
 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc \
-    && apt-get -y install r-base-dev libssl-dev python3 jags libx11-dev git libcurl4-openssl-dev make libgit2-dev zlib1g-dev libzmq3-dev libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev
+    && apt-get -y install libssl-dev python3 jags libx11-dev git libcurl4-openssl-dev make libgit2-dev zlib1g-dev libzmq3-dev libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev
+
+RUN wget https://cran.r-project.org/src/base/R-4/R-4.4.2.tar.gz -O R-4.4.2.tar.gz \
+   && tar -xf R-4.4.2.tar.gz \
+   && cd R-4.4.2* && ./configure && make -j4 && make install
 
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
 USER root
+RUN export PATH="/usr/local/bin:$PATH"
+RUN source ~/.bash_profile
 RUN chown -R ${NB_UID} "/usr/local/lib"
 RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}
@@ -54,7 +60,8 @@ WORKDIR ${HOME}
 #RUN apt-get -y install python3 python3-pip
 RUN python3 -m pip install --no-cache-dir notebook jupyterlab --break-system-packages
 RUN pip install --no-cache-dir jupyterhub --break-system-packages
-
+RUN export PATH="/usr/local/bin:$PATH"
+RUN source ~/.bash_profile
 #WORKDIR /opt/user1/
 
 #from source
