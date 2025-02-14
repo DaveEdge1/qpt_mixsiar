@@ -1,16 +1,16 @@
 #start from r-base
 FROM rocker/binder
 
-RUN getent passwd username
+RUN id
 
 USER root
-RUN getent passwd username
+RUN id
 ARG NB_USER=jovyan
 ARG NB_UID=1000
 ENV USER ${NB_USER}
 ENV NB_UID ${NB_UID}
 ENV HOME /home/${NB_USER}
-RUN getent passwd username
+RUN id
 RUN groupmod -g 1001 node \
   && usermod -u 1001 -g 1001 node
 
