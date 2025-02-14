@@ -5,11 +5,10 @@ RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
 USER root
 
-RUN adduser --disabled-password \
-    --gecos "Default user" \
-    --uid ${NB_UID} \
-    ${NB_USER}
-
+#RUN adduser --disabled-password \
+#    --gecos "Default user" \
+#    --uid ${NB_UID} \
+#    ${NB_USER}
 
 RUN apt-get -y update \
     && apt-get -y install jags \
@@ -20,8 +19,6 @@ ARG NB_UID=1000
 ENV USER ${NB_USER}
 ENV NB_UID ${NB_UID}
 ENV HOME /home/${NB_USER}
-
-
 
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
