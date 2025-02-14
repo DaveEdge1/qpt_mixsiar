@@ -75,7 +75,7 @@ RUN pip install --no-cache-dir jupyterhub --break-system-packages
 #RUN python3 pip_install_from_conda_yaml.py
 
 RUN conda env create -f qpt_conda_env.yaml
-SHELL ["conda", "run", "-n", "myenv", "/bin/bash", "-c"]
+SHELL ["conda", "run", "-n", "qpt", "/bin/bash", "-c"]
 
 #Set up renv
 RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))"
