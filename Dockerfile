@@ -6,6 +6,7 @@ RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 USER root
 ARG NB_USER=jovyan
 ARG NB_UID=1000
+ARG VERSION=4.4.2
 ENV USER ${NB_USER}
 ENV NB_UID ${NB_UID}
 ENV HOME /home/${NB_USER}
@@ -17,11 +18,11 @@ RUN adduser --disabled-password \
 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc \
     && apt-get -y install libssl-dev python3 jags libx11-dev git libcurl4-openssl-dev make libgit2-dev zlib1g-dev libzmq3-dev libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev \
-    && apt-get -y install build-essential gfortran libreadline-dev libxt-dev libbz2-dev
-
-RUN wget https://cran.r-project.org/src/base/R-4/R-4.4.2.tar.gz -O R-4.4.2.tar.gz \
-   && tar -xf R-4.4.2.tar.gz \
-   && cd R-4.4.2* && ./configure && make -j4 && make install
+    && apt-get install -y --no-install-recommends \
+    r-base-core=${VERSION} \
+    r-base-html=${VERSION} \
+    r-doc-html=${VERSION} \
+    r-base-dev=${VERSION}
 
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
