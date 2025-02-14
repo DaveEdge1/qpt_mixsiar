@@ -21,7 +21,7 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc \
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
 USER root
-RUN chown -R ${NB_UID} "/usr/local/lib/R/site-library"
+RUN chown -R ${NB_UID} "/usr/local/lib"
 RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}
 WORKDIR ${HOME}/${NB_UID}
