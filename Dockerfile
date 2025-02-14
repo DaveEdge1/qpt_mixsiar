@@ -1,19 +1,29 @@
 #start from r-base
 FROM rocker/binder
 
-ARG NB_USER
-ARG NB_UID
+ARG NB_USER=jovyan
+ARG NB_UID=1000
+ENV USER ${NB_USER}
+ENV NB_UID ${NB_UID}
+ENV HOME /home/${NB_USER}
 
-RUN groupadd -g 1000 jovyan
-RUN useradd -g jovyan -u 1000 -m jovyan
+RUN adduser --disabled-password \
+    --gecos "Default user" \
+    --uid ${NB_UID} \
+    ${NB_USER}
 
-COPY --chown=${NB_USER} . ${HOME}
-
+COPY . ${HOME}
 USER root
-ADD . /home/
+#Install JAGS
+#from apt
+RUN apt-get -y update \
+    && apt-get -y install jags
+
+RUN chown -R ${NB_UID} ${HOME}
+USER ${NB_USER}
 
 #update Ubuntu
-RUN apt-get -y update
+
 #  && apt-get install adduser
 
 #ARG NB_USER=user1
@@ -44,10 +54,6 @@ RUN pip install --no-cache-dir jupyterhub --break-system-packages
 
 #WORKDIR /opt/user1/
 
-#Install JAGS
-#from apt
-RUN apt-get -y install jags
-
 #from source
 # RUN apt-get update && . /etc/environment \
 #   && wget sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Source/JAGS-4.3.2.tar.gz  -O jags.tar.gz \
@@ -55,8 +61,8 @@ RUN apt-get -y install jags
 #   && cd JAGS* && ./configure && make -j4 && make install
 
 ## httr authentication uses this port
-EXPOSE 1410
-ENV HTTR_LOCALHOST 0.0.0.0
+#EXPOSE 1410
+#ENV HTTR_LOCALHOST 0.0.0.0
 
 #set up environment in Jupyter
 COPY qpt_conda_env.yaml qpt_conda_env.yaml
@@ -65,12 +71,12 @@ RUN python3 pip_install_from_conda_yaml.py
 
 #Set up renv
 RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))"
-WORKDIR /home
+#WORKDIR /home
 COPY renv.lock renv.lock
 ENV RENV_PATHS_LIBRARY renv/library
 
 #restore environment from lockfile
-USER ${NB_USER}
+#USER ${NB_USER}
 RUN R -e "options(renv.config.pak.enabled = TRUE); renv::restore()"
 
 
