@@ -1,6 +1,7 @@
 #start from r-base
 FROM rocker/binder
 
+USER root
 ARG NB_USER=jovyan
 ARG NB_UID=1000
 ENV USER ${NB_USER}
@@ -13,7 +14,6 @@ RUN adduser --disabled-password \
     ${NB_USER}
 
 COPY . ${HOME}
-USER root
 #Install JAGS
 #from apt
 RUN apt-get -y update \
