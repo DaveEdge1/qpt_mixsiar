@@ -24,7 +24,7 @@ USER root
 RUN chown -R ${NB_UID} "/usr/local/lib"
 RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}
-WORKDIR ${HOME}/${NB_UID}
+WORKDIR ${HOME}
 #update Ubuntu
 
 #  && apt-get install adduser
