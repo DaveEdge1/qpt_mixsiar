@@ -4,6 +4,11 @@ FROM continuumio/miniconda3
 RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
 USER root
+ARG NB_USER=jovyan
+ARG NB_UID=1000
+ENV USER ${NB_USER}
+ENV NB_UID ${NB_UID}
+ENV HOME /home/${NB_USER}
 
 RUN adduser --disabled-password \
     --gecos "Default user" \
@@ -14,19 +19,13 @@ RUN apt-get -y update \
     && apt-get -y install jags \
     && apt-get -y install r-base-dev
 
-ARG NB_USER=jovyan
-ARG NB_UID=1000
-ENV USER ${NB_USER}
-ENV NB_UID ${NB_UID}
-ENV HOME /home/${NB_USER}
-
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
 USER root
 RUN chown -R ${NB_UID} "/usr/local/lib/R/site-library"
 RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}
-
+WORKDIR ${HOME}/${NB_UID}
 #update Ubuntu
 
 #  && apt-get install adduser
