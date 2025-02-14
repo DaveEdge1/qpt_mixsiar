@@ -1,14 +1,14 @@
 #start from r-base
-FROM jupyter/scipy-notebook:cf6258237ff9
+FROM continuumio/miniconda3
 
 RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
 USER root
 
-#RUN adduser --disabled-password \
-#    --gecos "Default user" \
-#    --uid ${NB_UID} \
-#    ${NB_USER}
+RUN adduser --disabled-password \
+    --gecos "Default user" \
+    --uid ${NB_UID} \
+    ${NB_USER}
 
 RUN apt-get -y update \
     && apt-get -y install jags \
@@ -54,8 +54,8 @@ USER ${NB_USER}
 
 #add python
 #RUN apt-get -y install python3 python3-pip
-#RUN python3 -m pip install --no-cache-dir notebook jupyterlab --break-system-packages
-#RUN pip install --no-cache-dir jupyterhub --break-system-packages
+RUN python3 -m pip install --no-cache-dir notebook jupyterlab --break-system-packages
+RUN pip install --no-cache-dir jupyterhub --break-system-packages
 
 #WORKDIR /opt/user1/
 
@@ -70,9 +70,12 @@ USER ${NB_USER}
 #ENV HTTR_LOCALHOST 0.0.0.0
 
 #set up environment in Jupyter
-COPY qpt_conda_env.yaml qpt_conda_env.yaml
-COPY pip_install_from_conda_yaml.py pip_install_from_conda_yaml.py
-RUN python3 pip_install_from_conda_yaml.py
+#COPY qpt_conda_env.yaml qpt_conda_env.yaml
+#COPY pip_install_from_conda_yaml.py pip_install_from_conda_yaml.py
+#RUN python3 pip_install_from_conda_yaml.py
+
+RUN conda env create -f qpt_conda_env.yaml
+SHELL ["conda", "run", "-n", "myenv", "/bin/bash", "-c"]
 
 #Set up renv
 RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))"
