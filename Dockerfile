@@ -3,8 +3,11 @@ FROM rocker/binder
 
 RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
+RUN groupmod -g 1001 rstudio \
+  && usermod -u 1001 -g 1001 rstudio
+
 USER root
-ARG NB_USER=rstudio
+ARG NB_USER=jovyan
 ARG NB_UID=1000
 ENV USER ${NB_USER}
 ENV NB_UID ${NB_UID}
