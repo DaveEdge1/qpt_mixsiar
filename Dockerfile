@@ -36,8 +36,8 @@ RUN apt install -y --no-install-recommends r-base
 COPY . ${HOME}
 USER root
 RUN export PATH="/usr/local/bin:$PATH"
-RUN /bin/bash ~/.bash_profile
 RUN chown -R ${NB_UID} "/usr/local/lib"
+RUN chown -R ${NB_UID} "/usr/local/bin"
 RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}
 WORKDIR ${HOME}
