@@ -18,10 +18,9 @@ RUN echo "Checking for 'apt.txt'..." \
         ; fi
 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc \
-    && apt-get -y install libssl-dev python3 jags libx11-dev git libcurl4-openssl-dev make libgit2-dev zlib1g-dev libzmq3-dev libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev
+    && apt-get -y install libssl-dev python3 python3-pip jags libx11-dev git libcurl4-openssl-dev make libgit2-dev zlib1g-dev libzmq3-dev libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev
 
 #add python
-#RUN apt-get -y install python3 python3-pip
 RUN python3 -m pip install --no-cache-dir notebook jupyterlab --break-system-packages
 RUN pip install --no-cache-dir jupyterhub --break-system-packages
 RUN export PATH="/usr/local/bin:$PATH"
