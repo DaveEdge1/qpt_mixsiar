@@ -13,15 +13,11 @@ ENV CONDA_DIR=/srv/conda
 ENV PATH ${CONDA_DIR}/bin:${PATH}
 ENV NCPUS=${NCPUS:--1}
 
-RUN echo ${NB_USER}
-RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
-
-#RUN useradd -ms /bin/bash jovyan
-
 COPY --chown=${NB_USER} . ${HOME}
 
 ENV DEBIAN_FRONTEND=noninteractive
 USER root
+RUN useradd -ms /bin/bash jovyan
 RUN echo "Checking for 'apt.txt'..." \
         ; if test -f "apt.txt" ; then \
         apt-get update --fix-missing > /dev/null\
@@ -32,7 +28,7 @@ RUN echo "Checking for 'apt.txt'..." \
 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc wget \
     && apt-get -y install libssl-dev python3 python3-pip jags libx11-dev git libcurl4-openssl-dev make libgit2-dev zlib1g-dev libzmq3-dev libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev
-RUN echo ${NB_USER}
+RUN echo NB_USER
 RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 #add python
 #RUN python3 -m pip install --no-cache-dir notebook jupyterlab --break-system-packages
@@ -77,8 +73,8 @@ RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
 #Install conda environment
 RUN conda env create -f qpt_conda_env.yaml
-ENV PATH="/home/rstudio/miniconda/bin:$PATH"
-ENV PATH "$PATH:/home/rstudio/.local/bin"
+ENV PATH="/home/jovyan/miniconda/bin:$PATH"
+ENV PATH "$PATH:/home/jovyan/.local/bin"
 RUN echo ${NB_USER}
 RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 #restore environment from lockfile
