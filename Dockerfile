@@ -80,6 +80,7 @@ RUN export PATH="/usr/local/bin:$PATH"
 RUN chown -R ${NB_UID} "/usr/local/lib"
 RUN chown -R ${NB_UID} "/usr/local/bin"
 RUN chown -R ${NB_UID} ${HOME}
+RUN chown -R ${NB_UID} "/srv/conda"
 USER ${NB_USER}
 WORKDIR ${HOME}
         
@@ -91,7 +92,7 @@ RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 #RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
 #Install conda environment
-RUN conda install  --quiet -c anaconda ipykernel
+RUN conda install --quiet -c anaconda ipykernel
 RUN conda env create -f qpt_conda_env.yaml
 ENV PATH="/home/jovyan/miniconda/bin:$PATH"
 ENV PATH "$PATH:/home/jovyan/.local/bin"
