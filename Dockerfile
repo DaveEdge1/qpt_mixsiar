@@ -5,6 +5,8 @@ FROM rocker/r-ver:4.4.2
 ARG NB_USER
 ARG NB_UID
 
+RUN useradd -ms /bin/bash jovyan
+
 COPY --chown=${NB_USER} . ${HOME}
 
 ENV DEBIAN_FRONTEND=noninteractive
