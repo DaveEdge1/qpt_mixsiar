@@ -2,7 +2,7 @@
 FROM rocker/binder:4.4.2
 
 ## Declares build arguments
-ARG NB_USER=rstudio
+ARG NB_USER
 ARG NB_UID
 
 RUN echo ${NB_USER}
