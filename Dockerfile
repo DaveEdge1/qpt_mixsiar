@@ -27,13 +27,15 @@ RUN export PATH="/usr/local/bin:$PATH"
 
 
 #Add Anaconda
-RUN wget https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
-RUN bash Anaconda3-5.0.1-Linux-x86_64.sh -b
-RUN rm Anaconda3-5.0.1-Linux-x86_64.sh
-ENV PATH /root/anaconda3/bin:$PATH
-RUN conda update conda
-RUN conda update anaconda
-RUN conda update --all
+RUN mkdir -p ~/miniconda3
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+RUN bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+RUN rm ~/miniconda3/miniconda.sh
+ENV PATH /root/miniconda3/bin:$PATH
+RUN conda init --all
+#RUN conda update conda
+#RUN conda update anaconda
+#RUN conda update --all
 
 #Set up renv
 RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))"
