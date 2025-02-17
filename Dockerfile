@@ -5,6 +5,9 @@ FROM rocker/binder:4.4.2
 ARG NB_USER
 ARG NB_UID
 
+RUN echo ${NB_USER}
+RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
+
 #RUN useradd -ms /bin/bash jovyan
 
 COPY --chown=${NB_USER} . ${HOME}
@@ -21,7 +24,8 @@ RUN echo "Checking for 'apt.txt'..." \
 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc wget \
     && apt-get -y install libssl-dev python3 python3-pip jags libx11-dev git libcurl4-openssl-dev make libgit2-dev zlib1g-dev libzmq3-dev libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev
-
+RUN echo ${NB_USER}
+RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 #add python
 #RUN python3 -m pip install --no-cache-dir notebook jupyterlab --break-system-packages
 #RUN pip install --no-cache-dir jupyterhub --break-system-packages
@@ -38,13 +42,14 @@ RUN conda init --all
 #RUN conda update conda
 #RUN conda update anaconda
 #RUN conda update --all
-
+RUN echo ${NB_USER}
+RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 #Set up renv
 RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))"
 #WORKDIR /home
 COPY renv.lock renv.lock
 ENV RENV_PATHS_LIBRARY renv/library
-
+RUN echo ${NB_USER}
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
 USER root
@@ -56,7 +61,8 @@ USER ${NB_USER}
 WORKDIR ${HOME}
         
 USER ${NB_USER}
-
+RUN echo ${NB_USER}
+RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 ## Run an install.R script, if it exists.
 
 #RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
@@ -65,7 +71,8 @@ USER ${NB_USER}
 RUN conda env create -f qpt_conda_env.yaml
 ENV PATH="/home/rstudio/miniconda/bin:$PATH"
 ENV PATH "$PATH:/home/rstudio/.local/bin"
-
+RUN echo ${NB_USER}
+RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 #restore environment from lockfile
 RUN R -e "renv::restore()"
 SHELL ["conda", "run", "-n", "qpt", "/bin/bash", "-c"]
