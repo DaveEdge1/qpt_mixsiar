@@ -37,23 +37,30 @@ RUN export PATH="/usr/local/bin:$PATH"
 
 
 #Add Anaconda
-RUN mkdir -p ~/miniconda3
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
-RUN bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
-RUN rm ~/miniconda3/miniconda.sh
-#ENV PATH /root/miniconda3/bin:$PATH
-RUN conda init --all
-#RUN conda update conda
-#RUN conda update anaconda
-#RUN conda update --all
-RUN echo ${NB_USER}
-RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
-#Set up renv
-RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))"
+RUN echo "Installing Miniforge..." \
+    # && curl -sSL "https://github.com/conda-forge/miniforge/releases/download/${MINIFORGE_VERSION}/Miniforge-${MINIFORGE_VERSION}-Linux-$(uname -m).sh" > installer.sh \
+    # && curl -sSL "https://github.com/conda-forge/miniforge/releases/download/${MINIFORGE_VERSION}/Miniforge-${MINIFORGE_VERSION}-Linux-x86_64.sh" > installer.sh \
+    && curl -sSL "https://github.com/conda-forge/miniforge/releases/download/23.11.0-0/Miniforge3-23.11.0-0-Linux-x86_64.sh" > installer.sh \
+    && /bin/bash installer.sh -u -b -p ${CONDA_DIR} \
+    && rm installer.sh \
+    && conda clean -afy \
+    # After installing the packages, we cleanup some unnecessary files
+    # to try reduce image size - see https://jcristharif.com/conda-docker-tips.html
+    && find ${CONDA_DIR} -follow -type f -name '*.a' -delete \
+    && find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
+
+RUN find ${CONDA_DIR} -follow -type f -name '*.a' -delete
+RUN find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
+
+RUN install2.r --error --skipmissing --skipinstalled -n "$NCPUS" pacman languageserver reticulate IRkernel renv remotes
+
+RUN install2.r --skipinstalled IRkernel
+RUN r -e "IRkernel::installspec(prefix='${CONDA_DIR}')"
+
 #WORKDIR /home
 COPY renv.lock renv.lock
 ENV RENV_PATHS_LIBRARY renv/library
-RUN echo ${NB_USER}
+RUN echo NB_USER
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
 USER root
@@ -79,5 +86,5 @@ RUN echo ${NB_USER}
 RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 #restore environment from lockfile
 RUN R -e "renv::restore()"
-SHELL ["conda", "run", "-n", "qpt", "/bin/bash", "-c"]
+#SHELL ["conda", "run", "-n", "qpt", "/bin/bash", "-c"]
 
