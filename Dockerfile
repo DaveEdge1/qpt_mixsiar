@@ -18,6 +18,14 @@ ENV CONDA_DIR=/srv/conda
 ENV PATH ${CONDA_DIR}/bin:${PATH}
 ENV NCPUS=${NCPUS:--1}
 
+# RStudio doesn't actually inherit the ENV set in Dockerfiles, so we
+# have to explicitly set it in Renviron.site
+RUN echo "PATH=${PATH}" >> /usr/local/lib/R/etc/Renviron.site
+
+# The terminal inside RStudio doesn't read from Renviron.site, but does read
+# from /etc/profile - so we rexport here.
+RUN echo "export PATH=${PATH}" >> /etc/profile
+
 COPY --chown=${NB_USER} . ${HOME}
 #COPY --chown=${NB_USER} /home/rstudio /home/jovyan
 
