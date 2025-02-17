@@ -5,6 +5,14 @@ FROM rocker/binder:4.4.2
 ARG NB_USER
 ARG NB_UID
 
+# Install conda here, to match what repo2docker does
+ENV CONDA_DIR=/srv/conda
+# ENV CONDA_DIR=/opt/conda
+
+# Add our conda environment to PATH, so python, mamba and other tools are found in $PATH
+ENV PATH ${CONDA_DIR}/bin:${PATH}
+ENV NCPUS=${NCPUS:--1}
+
 RUN echo ${NB_USER}
 RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
@@ -37,7 +45,7 @@ RUN mkdir -p ~/miniconda3
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
 RUN bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 RUN rm ~/miniconda3/miniconda.sh
-ENV PATH /root/miniconda3/bin:$PATH
+#ENV PATH /root/miniconda3/bin:$PATH
 RUN conda init --all
 #RUN conda update conda
 #RUN conda update anaconda
