@@ -90,5 +90,5 @@ RUN echo ${NB_USER}
 RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 #restore environment from lockfile
 RUN R -e "renv::restore()"
-#SHELL ["conda", "run", "-n", "qpt", "/bin/bash", "-c"]
+SHELL ["conda", "run", "-n", "qpt", "/bin/bash", "-c"]
 
