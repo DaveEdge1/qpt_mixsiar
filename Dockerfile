@@ -1,11 +1,11 @@
 #start from r-base
-FROM rocker/r-ver:4.4.2
+FROM rocker/binder:4.4.2
 
 ## Declares build arguments
 ARG NB_USER
 ARG NB_UID
 
-RUN useradd -ms /bin/bash jovyan
+#RUN useradd -ms /bin/bash jovyan
 
 COPY --chown=${NB_USER} . ${HOME}
 
@@ -23,8 +23,8 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc wget
     && apt-get -y install libssl-dev python3 python3-pip jags libx11-dev git libcurl4-openssl-dev make libgit2-dev zlib1g-dev libzmq3-dev libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev
 
 #add python
-RUN python3 -m pip install --no-cache-dir notebook jupyterlab --break-system-packages
-RUN pip install --no-cache-dir jupyterhub --break-system-packages
+#RUN python3 -m pip install --no-cache-dir notebook jupyterlab --break-system-packages
+#RUN pip install --no-cache-dir jupyterhub --break-system-packages
 RUN export PATH="/usr/local/bin:$PATH"
 
 
@@ -63,6 +63,8 @@ USER ${NB_USER}
 
 #Install conda environment
 RUN conda env create -f qpt_conda_env.yaml
+ENV PATH="/home/rstudio/miniconda/bin:$PATH"
+ENV PATH "$PATH:/home/rstudio/.local/bin"
 
 #restore environment from lockfile
 RUN R -e "renv::restore()"
