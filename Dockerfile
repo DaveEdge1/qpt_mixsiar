@@ -83,6 +83,7 @@ RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 #RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
 #Install conda environment
+RUN conda install -c anaconda ipykernel
 RUN conda env create -f qpt_conda_env.yaml
 ENV PATH="/home/jovyan/miniconda/bin:$PATH"
 ENV PATH "$PATH:/home/jovyan/.local/bin"
@@ -90,5 +91,5 @@ RUN echo ${NB_USER}
 RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 #restore environment from lockfile
 RUN R -e "renv::restore()"
-SHELL ["conda", "run", "-n", "qpt", "/bin/bash", "-c"]
-
+#SHELL ["conda", "run", "-n", "qpt", "/bin/bash", "-c"]
+RUN python -m ipykernel install --user --name=qpt
