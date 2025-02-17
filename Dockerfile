@@ -57,7 +57,7 @@ USER ${NB_USER}
 
 ## Run an install.R script, if it exists.
 
-RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
+#RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
 #Install conda environment
 RUN conda env create -f qpt_conda_env.yaml
