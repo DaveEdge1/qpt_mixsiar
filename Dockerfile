@@ -2,8 +2,8 @@
 FROM rocker/binder:4.4.2
 
 ## Declares build arguments
-ARG NB_USER
-ARG NB_UID
+ARG NB_USER=jovyan
+ARG NB_UID=1000
 
 # Install conda here, to match what repo2docker does
 ENV CONDA_DIR=/srv/conda
