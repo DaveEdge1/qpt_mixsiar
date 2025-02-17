@@ -91,7 +91,7 @@ RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 #RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
 #Install conda environment
-RUN conda install -c anaconda ipykernel
+RUN conda install  --quiet -c anaconda ipykernel
 RUN conda env create -f qpt_conda_env.yaml
 ENV PATH="/home/jovyan/miniconda/bin:$PATH"
 ENV PATH "$PATH:/home/jovyan/.local/bin"
