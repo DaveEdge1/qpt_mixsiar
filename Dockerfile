@@ -71,7 +71,6 @@ WORKDIR ${HOME}
 RUN python3 -m pip install --no-cache-dir notebook jupyterlab --break-system-packages
 RUN pip install --no-cache-dir jupyterhub --break-system-packages
 RUN export PATH="/usr/local/bin:$PATH"
-RUN source ~/.bash_profile
 #WORKDIR /opt/user1/
 
 #from source
