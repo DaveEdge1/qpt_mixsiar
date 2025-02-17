@@ -2,13 +2,13 @@
 FROM rocker/binder:4.4.2
 
 ## Declares build arguments
-ARG NB_USER
+ARG NB_USER=rstudio
 ARG NB_UID
 
 RUN echo ${NB_USER}
 RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
-RUN useradd -ms /bin/bash jovyan
+#RUN useradd -ms /bin/bash jovyan
 
 COPY --chown=${NB_USER} . ${HOME}
 
@@ -69,8 +69,8 @@ RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
 #Install conda environment
 RUN conda env create -f qpt_conda_env.yaml
-ENV PATH="/home/jovyan/miniconda/bin:$PATH"
-ENV PATH "$PATH:/home/jovyan/.local/bin"
+ENV PATH="/home/rstudio/miniconda/bin:$PATH"
+ENV PATH "$PATH:/home/rstudio/.local/bin"
 RUN echo ${NB_USER}
 RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 #restore environment from lockfile
