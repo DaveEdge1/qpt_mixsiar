@@ -1,5 +1,5 @@
 #start from r-base
-FROM continuumio/miniconda3
+FROM rocker/r-ver:4.4.2
 
 RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
 
@@ -19,19 +19,6 @@ RUN adduser --disabled-password \
 RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc \
     && apt-get -y install libssl-dev python3 jags libx11-dev git libcurl4-openssl-dev make libgit2-dev zlib1g-dev libzmq3-dev libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev
 
-# update indices
-RUN apt update -qq
-# install two helper packages we need
-RUN apt install -y --no-install-recommends software-properties-common dirmngr
-# add the signing key (by Michael Rutter) for these repos
-# To verify key, run gpg --show-keys /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc 
-# Fingerprint: E298A3A825C0D65DFD57CBB651716619E084DAB9
-RUN wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
-# add the repo from CRAN -- lsb_release adjusts to 'noble' or 'jammy' or ... as needed
-RUN add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
-# install R itself
-RUN apt install -y --no-install-recommends r-base
-
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
 USER root
@@ -41,53 +28,24 @@ RUN chown -R ${NB_UID} "/usr/local/bin"
 RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}
 WORKDIR ${HOME}
-#update Ubuntu
-
-#  && apt-get install adduser
-
-#ARG NB_USER=user1
-#ARG NB_UID=1000
-#ENV USER ${NB_USER}
-#ENV NB_UID ${NB_UID}
-#ENV HOME /home/${NB_USER}
-
-#RUN usermod -d /home/user1 -l newname node
-
-#RUN adduser --disabled-password \
-#    --gecos "Default user" \
-#    --uid ${NB_UID} \
-#    ${NB_USER}
-
-#RUN chown -R ${NB_UID} ${HOME}
-#RUN chown -R ${NB_UID} /opt/user1
-
-#WORKDIR ${HOME}
-#USER ${NB_USER}
-
-#ENV PATH $PATH:/home/${NB_USER}/.local/bin
 
 #add python
 #RUN apt-get -y install python3 python3-pip
 RUN python3 -m pip install --no-cache-dir notebook jupyterlab --break-system-packages
 RUN pip install --no-cache-dir jupyterhub --break-system-packages
 RUN export PATH="/usr/local/bin:$PATH"
-#WORKDIR /opt/user1/
 
-#from source
-# RUN apt-get update && . /etc/environment \
-#   && wget sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Source/JAGS-4.3.2.tar.gz  -O jags.tar.gz \
-#   && tar -xf jags.tar.gz \
-#   && cd JAGS* && ./configure && make -j4 && make install
 
-## httr authentication uses this port
-#EXPOSE 1410
-#ENV HTTR_LOCALHOST 0.0.0.0
+#Add Anaconda
+RUN wget https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
+RUN bash Anaconda3-5.0.1-Linux-x86_64.sh -b
+RUN rm Anaconda3-5.0.1-Linux-x86_64.sh
+ENV PATH /root/anaconda3/bin:$PATH
+RUN conda update conda
+RUN conda update anaconda
+RUN conda update --all
 
-#set up environment in Jupyter
-#COPY qpt_conda_env.yaml qpt_conda_env.yaml
-#COPY pip_install_from_conda_yaml.py pip_install_from_conda_yaml.py
-#RUN python3 pip_install_from_conda_yaml.py
-
+#Install conda environment
 RUN conda env create -f qpt_conda_env.yaml
 
 
