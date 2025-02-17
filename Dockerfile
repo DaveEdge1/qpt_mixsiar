@@ -2,8 +2,13 @@
 FROM rocker/binder:4.4.2
 
 ## Declares build arguments
+USER root
 ARG NB_USER=jovyan
 ARG NB_UID=1000
+RUN useradd -ms /bin/bash jovyan
+RUN usermod -l jovyan rstudio
+RUN groupmod -n jovyan rstudio
+RUN usermod -d /home/jovyan -m jovyan
 
 # Install conda here, to match what repo2docker does
 ENV CONDA_DIR=/srv/conda
@@ -17,8 +22,6 @@ COPY --chown=${NB_USER} . ${HOME}
 COPY --chown=${NB_USER} /home/rstudio /home/jovyan
 
 ENV DEBIAN_FRONTEND=noninteractive
-USER root
-RUN useradd -ms /bin/bash jovyan
 RUN echo "Checking for 'apt.txt'..." \
         ; if test -f "apt.txt" ; then \
         apt-get update --fix-missing > /dev/null\
