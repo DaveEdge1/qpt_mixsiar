@@ -19,7 +19,7 @@ ENV PATH ${CONDA_DIR}/bin:${PATH}
 ENV NCPUS=${NCPUS:--1}
 
 COPY --chown=${NB_USER} . ${HOME}
-COPY --chown=${NB_USER} /home/rstudio /home/jovyan
+#COPY --chown=${NB_USER} /home/rstudio /home/jovyan
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN echo "Checking for 'apt.txt'..." \
