@@ -12,6 +12,7 @@ RUN echo ${HOME}
 COPY . ${HOME}
 RUN ls -alh ${HOME}
 RUN ls -alh ${HOME}/..
+RUN chown ${HOME}/install_jupyter.sh root
 RUN ${HOME}/install_jupyter.sh
 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc wget \
