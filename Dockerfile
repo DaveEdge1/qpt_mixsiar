@@ -4,8 +4,8 @@ ENV NB_USER="rstudio"
 ENV VIRTUAL_ENV="/opt/venv"
 ENV PATH="${VIRTUAL_ENV}/bin:${PATH}"
 
-COPY install_jupyter.sh install_jupyter.sh
-RUN install_jupyter.sh
+COPY install_jupyter.sh ${HOME}/install_jupyter.sh
+RUN ${HOME}/install_jupyter.sh
 
 COPY --chown=${NB_USER} . ${HOME}
 
