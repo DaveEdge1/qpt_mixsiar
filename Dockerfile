@@ -9,7 +9,7 @@ ENV HOME="/home/${NB_USER}"
 
 RUN echo ${HOME}
 
-COPY --chown=${NB_USER} . ${HOME}
+COPY . ${HOME}
 RUN ls -alh ${HOME}
 RUN ls -alh ${HOME}/..
 RUN ${HOME}/install_jupyter.sh
