@@ -11,8 +11,9 @@ ENV HOME="/home/${NB_USER}"
 
 RUN echo ${HOME}
 
-COPY . ${HOME}
+COPY --chown=${NB_USER} . ${HOME}
 RUN chmod +x ${HOME}/install_jupyter.sh
+RUN ls -alh
 RUN ${HOME}/install_jupyter.sh
 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc wget \
