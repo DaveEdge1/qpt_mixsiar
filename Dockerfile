@@ -43,7 +43,7 @@ RUN echo "Checking for 'apt.txt'..." \
         && rm -rf /var/lib/apt/lists/* \
         ; fi
 
-RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc wget \
+RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc wget urllib3 \
     && apt-get -y install libssl-dev python3-venv python3-dev python3-pip jags libx11-dev git libcurl4-openssl-dev make libgit2-dev zlib1g-dev libzmq3-dev libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev 
 RUN echo NB_USER
 RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
