@@ -6,9 +6,7 @@ USER root
 ARG NB_USER=jovyan
 ARG NB_UID=1000
 #RUN useradd -ms /bin/bash jovyan
-RUN usermod -l jovyan rstudio
-RUN groupmod -n jovyan rstudio
-RUN usermod -d /home/jovyan -m jovyan
+RUN usermod -d /home/jovyan -m rstudio
 
 RUN ls -alh /home/rstudio
 
