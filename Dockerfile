@@ -4,10 +4,9 @@ ENV NB_USER="rstudio"
 ENV VIRTUAL_ENV="/opt/venv"
 ENV PATH="${VIRTUAL_ENV}/bin:${PATH}"
 
-COPY install_jupyter.sh ${HOME}/install_jupyter.sh
-RUN ${HOME}/install_jupyter.sh
-
 COPY --chown=${NB_USER} . ${HOME}
+RUN echo ls -alh ${HOME}
+RUN ${HOME}/install_jupyter.sh
 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc wget \
     && apt-get -y install libssl-dev python3 python3-pip jags libx11-dev git libcurl4-openssl-dev make libgit2-dev zlib1g-dev libzmq3-dev libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev
