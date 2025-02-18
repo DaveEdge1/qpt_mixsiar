@@ -82,8 +82,8 @@ RUN echo "Installing Miniforge..." \
     && find ${CONDA_DIR} -follow -type f -name '*.a' -delete \
     && find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
 
-RUN find ${CONDA_DIR} -follow -type f -name '*.a' -delete
-RUN find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
+#RUN find ${CONDA_DIR} -follow -type f -name '*.a' -delete
+#RUN find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
 
 RUN R --quiet -e "devtools::install_github('IRkernel/IRkernel')" && \
     R --quiet -e "IRkernel::installspec(prefix='${VENV_DIR}')"
