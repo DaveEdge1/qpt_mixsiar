@@ -1,5 +1,7 @@
 FROM rocker/geospatial:4.4.2
 
+RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
+
 USER root
 
 ENV NB_USER="rstudio"
