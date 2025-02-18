@@ -11,10 +11,11 @@ ENV HOME="/home/${NB_USER}"
 
 RUN echo ${HOME}
 
-COPY --chown=${NB_USER} . ${HOME}
-RUN chmod +x ${HOME}/install_jupyter.sh
+WORKDIR ${HOME}
+COPY --chown=${NB_USER} . .
+RUN chmod +x install_jupyter.sh
 RUN ls -alh
-RUN ${HOME}/install_jupyter.sh
+RUN install_jupyter.sh
 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc wget \
     && apt-get -y install libssl-dev python3 python3-pip jags libx11-dev git libcurl4-openssl-dev make libgit2-dev zlib1g-dev libzmq3-dev libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev
@@ -23,9 +24,9 @@ EXPOSE 8888
 
 CMD ["jupyter", "lab", "--ip", "0.0.0.0", "--no-browser"]
 
-RUN chown ${HOME} rstudio
+#RUN chown ${HOME} rstudio
 
-USER ${NB_USER}
+#USER ${NB_USER}
 
 #Set up renv
 USER ${NB_USER}
