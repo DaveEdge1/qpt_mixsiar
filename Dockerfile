@@ -8,7 +8,7 @@ ARG NB_UID=1000
 RUN useradd -ms /bin/bash jovyan
 RUN usermod -d /home/jovyan -m rstudio
 
-RUN ls -alh /home/rstudio
+RUN rm -r /home/rstudio
 
 # Install conda here, to match what repo2docker does
 ENV CONDA_DIR=/srv/conda
