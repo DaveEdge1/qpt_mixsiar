@@ -10,6 +10,8 @@ RUN usermod -l jovyan rstudio
 RUN groupmod -n jovyan rstudio
 RUN usermod -d /home/jovyan -m jovyan
 
+RUN ls -alh /home/rstudio
+
 # Install conda here, to match what repo2docker does
 ENV CONDA_DIR=/srv/conda
 # ENV CONDA_DIR=/opt/conda
