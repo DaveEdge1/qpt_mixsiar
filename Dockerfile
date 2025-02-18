@@ -26,11 +26,11 @@ USER root
 RUN chown -R jovyan /usr/local/lib/R/site-library
 
 # Install conda here, to match what repo2docker does
-#ENV CONDA_DIR=/srv/conda
+ENV CONDA_DIR=/srv/conda
 # ENV CONDA_DIR=/opt/conda
 
 # Add our conda environment to PATH, so python, mamba and other tools are found in $PATH
-#ENV PATH ${CONDA_DIR}/bin:${PATH}
+ENV PATH ${CONDA_DIR}/bin:${PATH}
 ENV NCPUS=${NCPUS:--1}
 
 COPY --chown=${NB_USER} . ${HOME}
@@ -69,9 +69,6 @@ RUN install2.r --error --skipmissing --skipinstalled -n "$NCPUS" devtools pacman
 
 RUN install2.r --skipinstalled IRkernel
 
-RUN R --quiet -e "devtools::install_github('IRkernel/IRkernel')" && \
-    R --quiet -e "IRkernel::installspec(prefix='${VENV_DIR}')"
-
 #Add Anaconda
 RUN echo "Installing Miniforge..." \
     # && curl -sSL "https://github.com/conda-forge/miniforge/releases/download/${MINIFORGE_VERSION}/Miniforge-${MINIFORGE_VERSION}-Linux-$(uname -m).sh" > installer.sh \
@@ -82,13 +79,14 @@ RUN echo "Installing Miniforge..." \
     && conda clean -afy \
     # After installing the packages, we cleanup some unnecessary files
     # to try reduce image size - see https://jcristharif.com/conda-docker-tips.html
-    && find ${VENV_DIR} -follow -type f -name '*.a' -delete \
-    && find ${VENV_DIR} -follow -type f -name '*.pyc' -delete
+    && find ${CONDA_DIR} -follow -type f -name '*.a' -delete \
+    && find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
 
-RUN find ${VENV_DIR} -follow -type f -name '*.a' -delete
-RUN find ${VENV_DIR} -follow -type f -name '*.pyc' -delete
+RUN find ${CONDA_DIR} -follow -type f -name '*.a' -delete
+RUN find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
 
-
+RUN R --quiet -e "devtools::install_github('IRkernel/IRkernel')" && \
+    R --quiet -e "IRkernel::installspec(prefix='${VENV_DIR}')"
 
 #RUN install2.r --skipinstalled IRkernel
 #RUN r -e "IRkernel::installspec(prefix='${CONDA_DIR}')"
