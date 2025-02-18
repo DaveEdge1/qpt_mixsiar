@@ -43,7 +43,7 @@ RUN echo "Checking for 'apt.txt'..." \
         && rm -rf /var/lib/apt/lists/* \
         ; fi
 
-RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc wget urllib3 \
+RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc wget \
     && apt-get -y install libssl-dev python3-venv python3-dev python3-pip jags libx11-dev git libcurl4-openssl-dev make libgit2-dev zlib1g-dev libzmq3-dev libfreetype6-dev libjpeg-dev libpng-dev libtiff-dev libicu-dev libfontconfig1-dev libfribidi-dev libharfbuzz-dev libxml2-dev 
 RUN echo NB_USER
 RUN awk -F: '{printf "%s:%s\n",$1,$3}' /etc/passwd
@@ -60,9 +60,7 @@ USER ${NB_USER}
 
 RUN python3 -m venv ${VENV_DIR} && \
     # Explicitly install a new enough version of pip
-    pip3 install pip==9.0.1 && \
-    pip3 install --no-cache-dir \
-         jupyter-rsession-proxy
+    pip3 install --no-cache-dir jupyter-rsession-proxy
 
 RUN R --quiet -e "devtools::install_github('IRkernel/IRkernel')" && \
     R --quiet -e "IRkernel::installspec(prefix='${VENV_DIR}')"
