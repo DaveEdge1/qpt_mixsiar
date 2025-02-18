@@ -28,7 +28,7 @@ fi
 
 # install python & setup venv
 # shellcheck source=/dev/null
-source /rocker_scripts/install_python.sh
+source /install_python.sh
 
 python3 -m pip install --no-cache-dir jupyter-rsession-proxy notebook jupyterlab jupyterhub
 
