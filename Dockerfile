@@ -23,7 +23,7 @@ WORKDIR ${HOME}
 ## Declares build arguments
 USER root
 
-RUN chown -R jovyan /PATH/TO/FILE
+RUN chown -R jovyan /usr/local/lib/R/site-library
 
 # Install conda here, to match what repo2docker does
 ENV CONDA_DIR=/srv/conda
