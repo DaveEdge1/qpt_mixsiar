@@ -62,7 +62,8 @@ USER ${NB_USER}
 
 RUN python3 -m venv ${VENV_DIR} && \
     # Explicitly install a new enough version of pip
-    pip3 install --no-cache-dir jupyter-rsession-proxy
+    pip3 install --no-cache-dir jupyter-rsession-proxy && \
+    pip3 install --no-cache-dir jupyter-client
 
 RUN install2.r --error --skipmissing --skipinstalled -n "$NCPUS" devtools pacman languageserver reticulate IRkernel renv remotes
 
