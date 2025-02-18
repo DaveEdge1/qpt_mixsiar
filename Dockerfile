@@ -6,7 +6,7 @@ ENV NB_USER="rstudio"
 ENV VIRTUAL_ENV="/opt/venv"
 ENV PATH="${VIRTUAL_ENV}/bin:${PATH}"
 
-RUN ${HOME}
+RUN echo ${HOME}
 
 COPY --chown=${NB_USER} . ${HOME}
 RUN ls -alh ${HOME}
