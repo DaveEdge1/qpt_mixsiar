@@ -1,6 +1,8 @@
 #start from rocker/geospatial
 FROM rocker/geospatial:4.4.2
 
+RUN useradd -ms /bin/bash jovyan
+
 ENV NB_USER jovyan
 ENV NB_UID 1000
 ENV VENV_DIR /srv/venv
