@@ -23,6 +23,8 @@ WORKDIR ${HOME}
 ## Declares build arguments
 USER root
 
+RUN chown -R jovyan /PATH/TO/FILE
+
 # Install conda here, to match what repo2docker does
 ENV CONDA_DIR=/srv/conda
 # ENV CONDA_DIR=/opt/conda
