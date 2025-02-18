@@ -5,7 +5,7 @@ ENV VIRTUAL_ENV="/opt/venv"
 ENV PATH="${VIRTUAL_ENV}/bin:${PATH}"
 
 COPY --chown=${NB_USER} . ${HOME}
-RUN echo ls -alh ${HOME}
+RUN ls -alh ${HOME}
 RUN ${HOME}/install_jupyter.sh
 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install pandoc wget \
