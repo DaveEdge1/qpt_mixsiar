@@ -5,7 +5,7 @@ FROM rocker/binder:4.4.2
 USER root
 ARG NB_USER=jovyan
 ARG NB_UID=1000
-#RUN useradd -ms /bin/bash jovyan
+RUN useradd -ms /bin/bash jovyan
 RUN usermod -d /home/jovyan -m rstudio
 
 RUN ls -alh /home/rstudio
