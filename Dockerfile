@@ -5,10 +5,10 @@ RUN useradd -ms /bin/bash jovyan
 
 ENV NB_USER jovyan
 ENV NB_UID 1000
-ENV VENV_DIR /srv/venv
+#ENV VENV_DIR /srv/venv
 
 # Set ENV for all programs...
-ENV PATH ${VENV_DIR}/bin:$PATH
+#ENV PATH ${VENV_DIR}/bin:$PATH
 # And set ENV for R! It doesn't read from the environment...
 RUN echo "PATH=${PATH}" >> /usr/local/lib/R/etc/Renviron
 RUN echo "export PATH=${PATH}" >> ${HOME}/.profile
@@ -56,11 +56,11 @@ RUN export PATH="/usr/local/bin:$PATH"
 
 # Create a venv dir owned by unprivileged user & set up notebook in it
 # This allows non-root to install python libraries if required
-RUN mkdir -p ${VENV_DIR} && chown -R ${NB_USER} ${VENV_DIR}
+RUN mkdir -p ${} && chown -R ${NB_USER} ${CONDA_DIR}
 
 USER ${NB_USER}
 
-RUN python3 -m venv ${VENV_DIR} && \
+RUN python3 -m venv ${CONDA_DIR} && \
     # Explicitly install a new enough version of pip
     pip3 install --no-cache-dir jupyter-rsession-proxy && \
     pip3 install --no-cache-dir jupyter-client
@@ -74,7 +74,7 @@ RUN echo "Installing Miniforge..." \
     # && curl -sSL "https://github.com/conda-forge/miniforge/releases/download/${MINIFORGE_VERSION}/Miniforge-${MINIFORGE_VERSION}-Linux-$(uname -m).sh" > installer.sh \
     # && curl -sSL "https://github.com/conda-forge/miniforge/releases/download/${MINIFORGE_VERSION}/Miniforge-${MINIFORGE_VERSION}-Linux-x86_64.sh" > installer.sh \
     && curl -sSL "https://github.com/conda-forge/miniforge/releases/download/23.11.0-0/Miniforge3-23.11.0-0-Linux-x86_64.sh" > installer.sh \
-    && /bin/bash installer.sh -u -b -p ${VENV_DIR} \
+    && /bin/bash installer.sh -u -b -p ${CONDA_DIR} \
     && rm installer.sh \
     && conda clean -afy \
     # After installing the packages, we cleanup some unnecessary files
@@ -86,7 +86,7 @@ RUN echo "Installing Miniforge..." \
 #RUN find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
 
 RUN R --quiet -e "devtools::install_github('IRkernel/IRkernel')" && \
-    R --quiet -e "IRkernel::installspec(prefix='${VENV_DIR}')"
+    R --quiet -e "IRkernel::installspec(prefix='${CONDA_DIR}')"
 
 #RUN install2.r --skipinstalled IRkernel
 #RUN r -e "IRkernel::installspec(prefix='${CONDA_DIR}')"
