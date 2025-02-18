@@ -5,6 +5,7 @@ USER root
 ENV NB_USER="rstudio"
 ENV VIRTUAL_ENV="/opt/venv"
 ENV PATH="${VIRTUAL_ENV}/bin:${PATH}"
+ENV HOME="/home/${NB_USER}"
 
 RUN echo ${HOME}
 
