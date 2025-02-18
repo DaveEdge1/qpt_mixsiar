@@ -21,6 +21,8 @@ EXPOSE 8888
 
 CMD ["jupyter", "lab", "--ip", "0.0.0.0", "--no-browser"]
 
+RUN chown ${HOME} rstudio
+
 USER ${NB_USER}
 
 #Set up renv
