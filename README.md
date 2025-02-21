@@ -1,6 +1,6 @@
 [![DOI](https://zenodo.org/badge/894243495.svg)](https://doi.org/10.5281/zenodo.14861520)
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/DaveEdge1/qpt_mixsiar/HEAD)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/DaveEdge1/qpt_mixsiar/HEAD?url=rstudio)
 
 ![example workflow](https://github.com/kurtlindberg/qpt_mixsiar/actions/workflows/main.yml/badge.svg)
 
